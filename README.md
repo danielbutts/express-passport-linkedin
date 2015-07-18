@@ -225,28 +225,21 @@ app.get('/auth/linkedin',
 
 What does that look like?  It looks like a route.  But it starts with `app.get` - where should you put that?  Do some visual pattern recognition in your `app.js` and routes files, and you'll see that `app.js` references `app` a lot - so put it in there.  Probably underneath the other lines you've copied from the same docs.
 
-```
-app.get('/auth/linkedin',
-  passport.authenticate('linkedin', { state: 'SOME STATE'  }),
-  function(req, res){
-    // The request will be redirected to LinkedIn for authentication, so this
-    // function will not be called.
-  });
-```
+Um... what should you do next?  Well, you just defined a route.  How would you check to see if that route is working?  Let's see what happens when we visit that route!
 
-Um... what should you do next?  Well, you just defined a route.  Let's see what happens when we visit that route!
-
-Visit http://localhost:3000/auth/linkedin
+Visit [http://localhost:3000/auth/linkedin](http://localhost:3000/auth/linkedin)
 
 Whoa.  "invalid redirect_uri. This value must match a URL registered with the API Key."  What's that about?  Let's take it apart:
 
-"invalid redirect_uri": look at the URL.  Notice the query_string value of `redirect_uri=http%3A%2F%2F127.0.0.1%3A3000`.  That's a URL-encoded value.  What would it look like if it's _not_ URL-encoded?  Drop into a `node` session and type:
+The first part says "invalid redirect_uri".  Look around - where is it getting that word, "redirect_uri"?  Look in your terminal, in the URL, in the Chrome inspector.  It's gotta be somewhere.
+
+You can see that it's in the URL.  Notice there's a query string key/value of `redirect_uri=http%3A%2F%2F127.0.0.1%3A3000`.  That's a URL-encoded value and it's hard to read.  What would it look like if it's _not_ URL-encoded?  Google "javascript url decode" and you'll see docs for things like `decodeURI` and `decodeURI` component.  OK - but how should you use them?  Just open up a `node` in Terminal, or open up a console in Chrome Web Developer Tools and type:
 
 ```
 decodeURIComponent('redirect_uri=http%3A%2F%2F127.0.0.1%3A3000')
 ```
 
-You'll see `redirect_uri=http://127.0.0.1:3000`.  OK - much more readable (you can get out of your node session now with ctl+D).  Where did `127.0.0.1:3000` come from?  We went to `localhost:3000`, right?
+You'll see `redirect_uri=http://127.0.0.1:3000`.  OK - much more readable.  So where did `127.0.0.1:3000` come from?  We went to `localhost:3000` in our browser, right?
 
 Search your codebase (in Atom it's CMD+Shift+D to find all in project).  You should come to this line:
 
@@ -258,9 +251,9 @@ passport.use(new LinkedInStrategy({
   //...
 ```
 
-We visited `localhost:3000`, but the callback URL is `127.0.0.1:3000`.  What did you register with LinkedIn?  Go back to the developer console and check.
+We visited `localhost:3000`, but the callback URL is `127.0.0.1:3000`.  What did you register with LinkedIn? Go back to your app's page in the LinkedIn developer site and check.
 
-We put `localhost:3000` there as well.  OK - so let's update our LinkedInStrategy to fix it:
+You put `localhost:3000` there as well.  So let's update our LinkedInStrategy to match:
 
 ```js
 passport.use(new LinkedInStrategy({
@@ -287,9 +280,9 @@ app.get('/auth/linkedin/callback', passport.authenticate('linkedin', {
 
 That looks like it'll do it.  Add that in.  Where should you add it?  Probably right below the other route you just added above.
 
-How can you test it?  Visit http://localhost:3000/auth/linkedin again.
+How can you test it?  Visit [http://localhost:3000/auth/linkedin](http://localhost:3000/auth/linkedin) again.
 
-Uh... what just happened?  Check the terminal:
+Uh-oh.  What just happened?  Check the terminal:
 
 `Error: passport.initialize() middleware not in use`
 
@@ -299,7 +292,7 @@ You are about to switch contexts again, so maybe make a note like "get /auth/lin
 
 ## Configuring Passport
 
-Their docs, for a beginning express user, are pretty terrible.  Search the "Documentation" page for "express" and you'll eventually find:
+Passport docs, for a beginning express user, are pretty terrible.  Search the "Documentation" page for "express" and you'll eventually find:
 
 ```js
 app.configure(function() {
@@ -321,7 +314,7 @@ We're trying to fix the `passport.initialize` error, so just add that one middle
 app.use(passport.initialize());
 ```
 
-What are you testing again?  Oh right, a GET to /auth/linkedin - run that again.  Now you get:
+What are you testing again?  Oh right, a GET to `/auth/linkedin` - run that again.  Now you get:
 
 `Failed to serialize user into session`
 
@@ -352,7 +345,7 @@ passport.deserializeUser(function(user, done) {
 });
 ```
 
-We're still on "get /auth/linkedin" - so check that again.  Did it work?  Are there any error?
+We're still on "get /auth/linkedin" on the notecard - so check that again.  Did it work?  Are there any errors?
 
 Notice in the log (in the terminal) you see `/auth/linkedin/callback?code=AQRbRXNzQ&state=SOME+STATE 302 917.981 ms` - nice!  That looks like a success.
 
@@ -664,6 +657,10 @@ If you are super stuck after, say, an hour of calmly and methodically going thro
 You know you are successful when your LinkedIn picture appears on the screen.
 
 ---
+
+# See how that works?
+
+Name 4 places where you didn't copy/paste from documentation directly.  Notice how rarely you can just copy/paste from documentation and have it *just work*.
 
 # Reflect: Self-asses
 
