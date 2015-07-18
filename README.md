@@ -516,7 +516,7 @@ http://passportjs.org/docs/authenticate
 
 Nothing there that's too useful.  It says `req.user` should be there.  How have we done this before?  That is, how have we stored the user in the past?  Probably in the session.  If you go back to the docs and search for session, you'll come to this section: http://passportjs.org/docs/configure where you'll come back to this:
 
-```
+```js
 app.configure(function() {
   app.use(express.static('public'));
   app.use(express.cookieParser());
