@@ -241,7 +241,7 @@ decodeURIComponent('redirect_uri=http%3A%2F%2F127.0.0.1%3A3000')
 
 You'll see `redirect_uri=http://127.0.0.1:3000`.  OK - much more readable.  So where did `127.0.0.1:3000` come from?  We went to `localhost:3000` in our browser, right?
 
-Search your codebase (in Atom it's CMD+Shift+D to find all in project).  You should come to this line:
+Search your codebase (in Atom it's CMD+Shift+F to find all in project).  You should come to this line:
 
 ```js
 passport.use(new LinkedInStrategy({
