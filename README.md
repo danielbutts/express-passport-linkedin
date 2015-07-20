@@ -318,7 +318,11 @@ What are you testing again?  Oh right, a GET to `/auth/linkedin` - run that agai
 
 `Failed to serialize user into session`
 
-Wat??  A little Googling might bring you [here](http://stackoverflow.com/questions/19948816/error-failed-to-serialize-user-into-session) where you see `passport.serializeUser` and `passport.deserializeUser`.  Those methods are being called on `passport`, so there's probably more information about that in the Passport docs.  Go there and search for it.  You'll find a snippet that looks like this in the passport docs:
+Wat??  A little Googling might bring you [here](http://stackoverflow.com/questions/19948816/error-failed-to-serialize-user-into-session) where you see `passport.serializeUser` and `passport.deserializeUser`.
+
+> Pro tip: Literally Google "Failed to serialize user into session" and the above link is the first result.
+
+Those methods are being called on `passport`, so there's probably more information about that in the Passport docs.  Go there and search for it.  You'll find a snippet that looks like this in the passport docs:
 
 ```js
 passport.serializeUser(function(user, done) {
