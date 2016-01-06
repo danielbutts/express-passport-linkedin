@@ -463,6 +463,31 @@ Let's go back to https://github.com/auth0/passport-linkedin-oauth2 and see if we
 
 It has a section about auto-handling the state param that includes a few small tweaks, like adding `state: true` in the config object, and removing the `state` property from the route.  Those look like good things to do.
 
+The `state` param is used to prevent CSRF attacks, and is [required by the LinkedIn API](https://developer.linkedin.com/documents/authentication). You can ask Passport to handle the sending and validating of the `state` parameter by passing `state: true` as an option to the strategy:
+
+```javascript
+passport.use(new LinkedInStrategy({
+    clientID: process.env.LINKEDIN_CLIENT_ID,
+    clientSecret: process.env.LINKEDIN_CLIENT_SECRET,
+    callbackURL: process.env.HOST + "/auth/linkedin/callback",
+    scope: ['r_emailaddress', 'r_basicprofile'],
+    state: true
+  },
+  function(accessToken, refreshToken, profile, done) {
+    done(null, {id: profile.id, displayName: profile.displayName, token: accessToken})
+  }
+));
+```
+
+and then remove the state object from the call to passport.authenticate:
+
+```javascript
+app.get('/auth/linkedin',
+  passport.authenticate('linkedin'),
+  function(req, res){
+  });
+```
+
 ## Configure the views
 
 The app isn't particularly user-friendly yet.  If you know the route to login, it works, but now you'll want to:
