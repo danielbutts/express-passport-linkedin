@@ -292,7 +292,9 @@ You are about to switch contexts again, so maybe make a note like "get /auth/lin
 
 ## Configuring Passport
 
-Passport docs, for a beginning express user, are pretty terrible.  Search the "Documentation" page for "express" and you'll eventually find:
+So our error was was about `passport.initialize() middleware not in use`, if you recall one of our objectives was to "Use targeted searches in documentation.. use CMD+F on web pages" so let's do that. We are in the passport docs, so let's do a serach for "initialize" and see what we get.
+
+Whaddya know, in the _middleware_ section we find something on `passport.initialize()`!
 
 ```js
 app.configure(function() {
